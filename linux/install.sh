@@ -94,6 +94,44 @@ sudo usermod -aG docker "$USER"
 echo -e "${GREEN}Added $USER to the docker group${NC}"
 echo -e "${YELLOW}NOTE: You'll need to log out and back in for this to take effect${NC}"
 
+# Install webi if not already installed
+if ! command -v webi >/dev/null 2>&1; then
+    echo -e "${YELLOW}Installing webi...${NC}"
+    curl -sS https://webi.sh/webi | sh
+    export PATH="$HOME/.local/bin:$PATH"
+    echo 'export PATH="$HOME/.local/bin:$PATH"' >> "$HOME/.profile"
+else
+    echo -e "${BLUE}webi is already installed${NC}"
+fi
+
+# Parse and install all webi packages from packages.json
+WEBI_PACKAGES=$(jq -r '.webi[]' "$SCRIPT_DIR/packages.json")
+for webi_pkg in $WEBI_PACKAGES; do
+    # Extract the base command for checking (e.g., node@lts -> node, golang@stable -> go, pyenv -> pyenv)
+    base_cmd=$(echo "$webi_pkg" | cut -d'@' -f1)
+    # Special case for golang: command is 'go'
+    if [ "$base_cmd" = "golang" ]; then
+        check_cmd="go"
+    else
+        check_cmd="$base_cmd"
+    fi
+    if ! command -v "$check_cmd" >/dev/null 2>&1; then
+        echo -e "${YELLOW}Installing $webi_pkg via webi...${NC}"
+        webi "$webi_pkg"
+    else
+        echo -e "${BLUE}$webi_pkg is already installed${NC}"
+    fi
+    # Add pyenv init to .zshrc if pyenv was just installed
+    if [ "$base_cmd" = "pyenv" ] && grep -q 'pyenv init' <<< "$(pyenv init -)" && ! grep -q 'pyenv init' "$HOME/.zshrc" 2>/dev/null; then
+        echo -e "${YELLOW}Adding pyenv init to .zshrc...${NC}"
+        echo -e '\n# Pyenv initialization' >> "$HOME/.zshrc"
+        echo 'export PYENV_ROOT="$HOME/.pyenv"' >> "$HOME/.zshrc"
+        echo 'export PATH="$PYENV_ROOT/bin:$PATH"' >> "$HOME/.zshrc"
+        echo 'eval "$(pyenv init -)"' >> "$HOME/.zshrc"
+        echo -e "${GREEN}pyenv init added to .zshrc${NC}"
+    fi
+done
+
 # Add eza alias to zsh config if it doesn't exist
 if ! grep -q "alias ls='eza'" "$HOME/.zshrc" 2>/dev/null; then
     echo -e "${YELLOW}Adding eza alias to zsh config...${NC}"

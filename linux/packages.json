@@ -12,6 +12,11 @@
         "wget",
         "fontconfig"
     ],
+    "webi": [
+        "node@lts",
+        "pyenv",
+        "golang@stable"
+    ],
     "external": [
         "oh-my-zsh",
         "powerlevel10k"
