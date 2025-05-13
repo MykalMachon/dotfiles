@@ -1,0 +1,22 @@
+{
+    "apt": [
+        "git",
+        "zsh",
+        "eza",
+        "docker-ce",
+        "docker-ce-cli",
+        "containerd.io",
+        "docker-buildx-plugin",
+        "docker-compose-plugin",
+        "curl",
+        "wget",
+        "fontconfig"
+    ],
+    "external": [
+        "oh-my-zsh",
+        "powerlevel10k"
+    ],
+    "fonts": [
+        "MesloLGS NF"
+    ]
+}
