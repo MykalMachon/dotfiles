@@ -1,5 +1,5 @@
 # Read package list
-$json = Get-Content ".\packages.json" | ConvertFrom-Json
+$json = Get-Content "$PSScriptRoot\packages.json" | ConvertFrom-Json
 
 # Install git first as it's a requirement for buckets 
 scoop install git
@@ -33,7 +33,7 @@ $profileLine = 'oh-my-posh init pwsh --config "$env:USERPROFILE\.config\oh-my-po
 if (-not (Test-Path -Path $PROFILE)) {
     New-Item -ItemType File -Path $PROFILE -Force | Out-Null
 } else {
-    echo ""
+    Write-Output "oh-my-posh is already configured via $PROFILE"
 }
 if (-not (Select-String -Path $PROFILE -Pattern "oh-my-posh init")) {
     Add-Content -Path $PROFILE -Value "$profileLine"
