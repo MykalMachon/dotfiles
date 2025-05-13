@@ -13,6 +13,6 @@
     "python",
     "nodejs-lts"
   ],
-  "gui": ["extras/obsidian", "extras/vscode", "extras/zed", "main/espanso"],
+  "gui": ["extras/obsidian", "extras/vscode", "extras/zed", "main/espanso", "extras/bruno"],
   "fonts": ["Cascadia-Code"]
 }
