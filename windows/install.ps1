@@ -20,7 +20,7 @@ foreach ($pkg in $json.cli + $json.gui + $json.fonts) {
     scoop install $pkg
 }
 
-# Setup ohjmy-posh 
+# Setup oh-my-posh 
 $ompConfigDir = "$env:USERPROFILE\.config\oh-my-posh"
 New-Item -ItemType Directory -Path $ompConfigDir -Force | Out-Null
 
