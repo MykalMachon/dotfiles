@@ -1,0 +1,29 @@
+{
+    "buckets": [
+        "main",
+        "extras",
+        "versions",
+        "nerd-fonts"
+    ],
+    "cli": [
+        "git",
+        "gh",
+        "pwsh",
+        "neovim",
+        "oh-my-posh",
+        "jq",
+        "curl",
+        "unzip",
+        "fzf",
+        "python",
+        "nodejs-lts"
+    ],
+    "gui": [
+        "extras/obsidian",
+        "extras/vscode",
+        "main/espanso"
+    ],
+    "fonts": [
+        "Cascadia-Code"
+    ]
+}
