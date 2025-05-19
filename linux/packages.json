@@ -2,7 +2,6 @@
     "apt": [
         "git",
         "zsh",
-        "eza",
         "docker-ce",
         "docker-ce-cli",
         "containerd.io",
