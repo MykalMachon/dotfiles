@@ -40,6 +40,17 @@ else
     sudo apt-get install -y git
 fi
 
+# Install lazygit if not already installed
+if command -v lazygit >/dev/null 2>&1; then
+    echo -e "${BLUE}lazygit is already installed${NC}"
+else
+    echo -e "${YELLOW}Installing lazygit...${NC}"
+    LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | \grep -Po '"tag_name": *"v\K[^"]*')
+    curl -Lo lazygit.tar.gz "https://github.com/jesseduffield/lazygit/releases/download/v${LAZYGIT_VERSION}/lazygit_${LAZYGIT_VERSION}_Linux_x86_64.tar.gz"
+    tar xf lazygit.tar.gz lazygit
+    sudo install lazygit -D -t /usr/local/bin/
+fi
+
 # Install the github CLI if not already installed
 if command -v gh >/dev/null 2>&1; then
     echo -e "${BLUE}GitHub CLI is already installed${NC}"
@@ -140,6 +151,19 @@ for webi_pkg in $WEBI_PACKAGES; do
         echo -e "${GREEN}pyenv init added to .zshrc${NC}"
     fi
 done
+
+# Install eza if not already installed
+if command -v eza >/dev/null 2>&1; then
+    echo -e "${BLUE}eza is already installed${NC}"
+else
+    echo -e "${YELLOW}Installing eza...${NC}"
+    sudo mkdir -p /etc/apt/keyrings
+    wget -qO- https://raw.githubusercontent.com/eza-community/eza/main/deb.asc | sudo gpg --dearmor -o /etc/apt/keyrings/gierens.gpg
+    echo "deb [signed-by=/etc/apt/keyrings/gierens.gpg] http://deb.gierens.de stable main" | sudo tee /etc/apt/sources.list.d/gierens.list
+    sudo chmod 644 /etc/apt/keyrings/gierens.gpg /etc/apt/sources.list.d/gierens.list
+    sudo apt update
+    sudo apt install -y eza
+fi
 
 # Add eza alias to zsh config if it doesn't exist
 if ! grep -q "alias ls='eza'" "$HOME/.zshrc" 2>/dev/null; then

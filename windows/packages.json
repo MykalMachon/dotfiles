@@ -11,7 +11,8 @@
     "unzip",
     "fzf",
     "python",
-    "nodejs-lts"
+    "nodejs-lts",
+    "lazygit"
   ],
   "gui": ["extras/obsidian", "extras/vscode", "extras/zed", "main/espanso", "extras/bruno"],
   "fonts": ["Cascadia-Code"]
