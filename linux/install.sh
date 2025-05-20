@@ -94,6 +94,15 @@ sudo usermod -aG docker "$USER"
 echo -e "${GREEN}Added $USER to the docker group${NC}"
 echo -e "${YELLOW}NOTE: You'll need to log out and back in for this to take effect${NC}"
 
+# Install LazyDocker 
+if ! command -v lazydocker --version > /dev/null 2>&1; then 
+	echo -e "${YELLOW}Installing lazydocker...${NC}"
+	curl https://raw.githubusercontent.com/jesseduffield/lazydocker/master/scripts/install_update_linux.sh | bash
+	echo -e "${YELLOW}Installed lazydocker!${NC}"
+else
+	echo -e "${BLUE}lazydocker is already installed${NC}"
+fi
+
 # Install webi if not already installed
 if ! command -v webi >/dev/null 2>&1; then
     echo -e "${YELLOW}Installing webi...${NC}"
