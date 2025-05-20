@@ -67,19 +67,32 @@ else
 fi
 
 # Install Docker repository dependencies
-echo -e "${YELLOW}Installing Docker prerequisites...${NC}"
-sudo apt-get install -y ca-certificates curl gnupg
+if ! command -v docker >/dev/null 2>&1; then
+	echo -e "${YELLOW}Installing Docker prerequisites...${NC}"
+	sudo apt-get install -y ca-certificates curl gnupg
 
-# Add Docker's official GPG key
-sudo install -m 0755 -d /etc/apt/keyrings
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
-sudo chmod a+r /etc/apt/keyrings/docker.gpg
+	# Add Docker's official GPG key
+	sudo install -m 0755 -d /etc/apt/keyrings
+	curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+	sudo chmod a+r /etc/apt/keyrings/docker.gpg
 
-# Set up the repository
-echo \
-  "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
-  "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | \
-  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+	# Set up the repository
+	echo \
+  		"deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+  		"$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | \
+  		sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+	# Install Docker
+	echo -e "${YELLOW}Installing Docker...${NC}"
+	sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+	# Add user to docker group
+	sudo usermod -aG docker "$USER"
+	echo -e "${GREEN}Added $USER to the docker group${NC}"
+	echo -e "${YELLOW}NOTE: You'll need to log out and back in for this to take effect${NC}"
+else 
+	echo -e "${BLUE}Docker is already installed"
+fi
 
 # Update apt package index
 sudo apt-get update
@@ -96,14 +109,6 @@ for package in $APT_PACKAGES; do
     fi
 done
 
-# Install Docker
-echo -e "${YELLOW}Installing Docker...${NC}"
-sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
-
-# Add user to docker group
-sudo usermod -aG docker "$USER"
-echo -e "${GREEN}Added $USER to the docker group${NC}"
-echo -e "${YELLOW}NOTE: You'll need to log out and back in for this to take effect${NC}"
 
 # Install LazyDocker 
 if ! command -v lazydocker --version > /dev/null 2>&1; then 
@@ -166,7 +171,7 @@ else
 fi
 
 # Add eza alias to zsh config if it doesn't exist
-if ! grep -q "alias ls='eza'" "$HOME/.zshrc" 2>/dev/null; then
+if ! grep -q "alias ls=\"eza\"" "$HOME/.zshrc" 2>/dev/null; then
     echo -e "${YELLOW}Adding eza alias to zsh config...${NC}"
     echo 'alias ls="eza"' >> "$HOME/.zshrc"
     echo 'alias ll="eza -l"' >> "$HOME/.zshrc"
