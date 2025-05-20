@@ -1,14 +1,14 @@
 # Read package list
 $json = Get-Content "$PSScriptRoot\packages.json" | ConvertFrom-Json
 
-# Install git first as it's a requirement for buckets 
-scoop install git
-
 # Set execution policy and install scoop
 Set-ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
 if (-not (Test-Path "$env:USERPROFILE\scoop")) {
     Invoke-RestMethod get.scoop.sh | Invoke-Expression
 }
+
+# Install git first as it's a requirement for buckets 
+scoop install git
 
 # Add buckets
 foreach ($bucket in $json.buckets) {
